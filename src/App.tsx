@@ -32,6 +32,47 @@ const M: Meta = {
     { title: '복용 시점이 중요', body: '지용성(비타민 A·D·E·K)은 식후에, 철분은 공복+비타민C와, 마그네슘은 취침 전이 좋은 식입니다. 시점만 맞춰도 흡수가 달라집니다.' },
     { title: '함께 먹을 때 주의', body: '칼슘과 철분, 칼슘과 마그네슘 고용량은 흡수를 서로 방해할 수 있어 시간차 복용이 권장됩니다. 본 안내는 일반 정보이며 약 복용 중이면 전문가와 상담하세요.' },
   ],
+  targets: ['영양제를 여러 개 챙기는 사람', '복용 시점·조합이 헷갈리는 사람', '꾸준한 복용 습관이 필요한 사람'],
+  goals: [
+    '복용 영양제를 시간대별 스케줄로 정리한다',
+    '오늘 복용을 체크해 복용률을 관리한다',
+    '함께 먹을 때 주의 조합을 안내한다',
+  ],
+  scenarios: [
+    '먹는 영양제 이름·복용 시간대를 등록한다',
+    '시간대별 스케줄에서 오늘 먹은 것을 체크한다',
+    '조합 주의와 (선택) AI 팁으로 복용 시점을 최적화한다',
+  ],
+  screens: [
+    { name: '영양제 등록', desc: '이름 + 복용 시간대(아침·점심·저녁·취침) 지정' },
+    { name: '오늘 복용', desc: '시간대별 영양제 + 복용 체크 + 복용률' },
+    { name: '조합 주의 · AI 팁', desc: '흡수 방해 조합 경고 + (선택) 권장 복용 시점' },
+  ],
+  pipelineDetail: [
+    { step: '영양제 등록', detail: '이름과 복용 시간대를 입력해 localStorage(na_supps)에 저장한다.' },
+    { step: '시간대 스케줄', detail: '아침·점심·저녁·취침 슬롯별로 먹을 영양제를 묶어 표시한다.' },
+    { step: '복용 체크', detail: '먹은 항목을 localStorage(na_taken)에 체크해 복용률을 집계한다.' },
+    { step: '조합 주의 · AI 팁(선택)', detail: '등록 영양제로 흡수 방해 조합을 규칙으로 감지하고, 키가 있으면 권장 복용 시점을 생성한다.' },
+  ],
+  promptNotes: [
+    '등록한 영양제 목록을 담아 각 영양제의 권장 복용 시점(식전/식후/취침)과 함께 먹을 때 주의를 일반 정보 톤으로 생성하도록 지시한다(의학적 단정 금지).',
+    '시간대 스케줄·복용 체크·조합 주의는 규칙으로 키 없이도 동작한다.',
+  ],
+  architecture:
+    '백엔드 없는 React SPA(일반 정보 제공용, 의학적 조언 아님). 공통 레이아웃·5탭은 src/ui.tsx, 복용 관리 기능은 src/App.tsx가 담당한다. ' +
+    '스케줄·체크·조합 주의는 규칙으로 동작하고, 복용 팁은 src/lib/ai.ts(선택)로 생성하며, 등록·복용은 브라우저 localStorage에 저장한다.',
+  structure: [
+    { path: 'src/App.tsx', desc: '영양제 등록·시간대 스케줄·복용 체크·조합 주의 + 메타(M)' },
+    { path: 'src/ui.tsx', desc: '공통 레이아웃·5탭·UI 헬퍼' },
+    { path: 'src/lib/ai.ts', desc: 'OpenAI chat 헬퍼(선택 복용 팁)' },
+    { path: 'src/index.css', desc: '테마·스케줄 스타일' },
+  ],
+  dataModel: [
+    { name: 'Supp', desc: '영양제(이름·복용 시간대 배열)' },
+    { name: '등록/체크', desc: 'localStorage "na_supps"(목록)·"na_taken"(오늘 복용)' },
+  ],
+  deploy:
+    'Vite 빌드(base: "./") 후 GitHub Actions(deploy.yml)가 main push 시 GitHub Pages로 자동 배포 → aebonlee.github.io/project26/',
   stack: ['React 18', 'TypeScript', 'Vite', 'localStorage', 'OpenAI(선택)'],
 };
 
