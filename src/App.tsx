@@ -73,6 +73,15 @@ const M: Meta = {
   ],
   deploy:
     'Vite 빌드(base: "./") 후 GitHub Actions(deploy.yml)가 main push 시 GitHub Pages로 자동 배포 → aebonlee.github.io/project26/',
+  scope: {
+    include: ['영양제 등록 → 시간대 스케줄·복용 체크·복용률', '조합 주의·AI 복용 팁(선택)', '규칙 + AI 보조'],
+    exclude: ['의학적 진단·처방', '약물 상호작용 DB 완비', '알림 푸시·구매'],
+  },
+  pitch: [
+    '언제 뭘 먹었는지 헷갈리는 문제를 시간대 스케줄로 해결',
+    '함께 먹을 때 흡수 방해 조합을 주의시키는 점',
+    '일반 정보이며 약 복용 시 전문가 상담 안내',
+  ],
   stack: ['React 18', 'TypeScript', 'Vite', 'localStorage', 'OpenAI(선택)'],
 };
 
